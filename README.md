@@ -1,6 +1,6 @@
 # Radio Thermostat driver
 
-Hubitat Driver for controlling [Radio Thermostat CT50](https://www.radiothermostat.com/product-page/ct50-wi-fi-smart-thermostat) (also known as Filtrete 3M-50) locally, with no hub or cloud connection required.
+Hubitat Driver for controlling [Radio Thermostat CT50](https://www.radiothermostat.com/product-page/ct50-wi-fi-smart-thermostat) (also known as Filtrete 3M-50) locally, with no hub or cloud connection required.  
 This driver was ported from [statusbits' SmartThings driver](https://github.com/statusbits/smartthings).
 
 1. Add `radio_thermostat.groovy` to your Hubitat as a new Driver (under `Drivers Code`)
@@ -8,8 +8,8 @@ This driver was ported from [statusbits' SmartThings driver](https://github.com/
 3. Assign your thermostat a static IP, and enter the IP into the device's `Thermostat IP Address` setting in Hubitat.
 5. Pressing Refresh on the device in Hubitat should now load the current state. Enjoy :)
 
-Links:
-[statusbits' SmartThings driver](https://github.com/statusbits/smartthings)
+Links:  
+[statusbits' SmartThings driver](https://github.com/statusbits/smartthings)  
 [Radio Thermostat API documentation](https://radiothermostat.desk.com/customer/portal/kb_article_attachments/38350/original.pdf?1411231951)
 
 ---
