@@ -10,7 +10,7 @@ This driver was ported from [statusbits' SmartThings driver](https://github.com/
 
 Links:  
 [statusbits' SmartThings driver](https://github.com/statusbits/smartthings)  
-[Radio Thermostat API documentation](https://radiothermostat.desk.com/customer/portal/kb_article_attachments/38350/original.pdf?1411231951)
+[Radio Thermostat API documentation](https://raw.githubusercontent.com/cometfish/hubitat_driver_radio_thermostat/master/docs/RTCOAWiFIAPIV1_3.pdf) (retrieved from the Wayback Machine archive of: https://radiothermostat.desk.com/customer/portal/kb_article_attachments/38350/original.pdf?1411231951 since Radio Thermostat have now taken down their support site and API documentation)
 
 ---
 
