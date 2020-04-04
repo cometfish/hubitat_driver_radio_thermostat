@@ -338,14 +338,17 @@ def setHeatingSetpoint(temp) {
     }
 
     log.info "Setting heating setpoint to ${t} °F"
-
+    double tval = (scale == "C") ? temperatureFtoC(t) : t
     def ev = [
         name:   "heatingSetpoint",
-        value:  (scale == "C") ? temperatureFtoC(t) : t,
+        value:  tval,
         unit:   scale,
     ]
 
     sendEvent(ev)
+    if (device.currentValue("thermostatMode") == "heat") {
+        sendEvent(name: "thermostatSetpoint", value: tval, isStateChange: true)
+    }
 
     return writeTstatValue('it_heat', t)
 }
@@ -370,13 +373,17 @@ def setCoolingSetpoint(temp) {
 
     log.info "Setting cooling setpoint to ${t} °F"
 
+    double tval = (scale == "C") ? temperatureFtoC(t) : t;
     def ev = [
         name:   "coolingSetpoint",
-        value:  (scale == "C") ? temperatureFtoC(t) : t,
+        value:  tval,
         unit:   scale,
     ]
 
     sendEvent(ev)
+    if (device.currentValue("thermostatMode") == "heat") {
+        sendEvent(name: "thermostatSetpoint", value: tval, isStateChange: true)
+    }
 
     return writeTstatValue('it_cool', t)
 }
@@ -624,21 +631,45 @@ private def parseTstatData(Map tstat) {
             unit:   getTemperatureScale(),
         ])
     }
-
-    if (tstat.containsKey("t_cool")) {
+    mode = device.currentValue("thermostatMode")
+    if (tstat.containsKey("tmode")) {
+        mode = parseThermostatMode(tstat.tmode)
         events << createEvent([
-            name:   "coolingSetpoint",
-            value:  scaleTemperature(tstat.t_cool.toFloat()),
-            unit:   getTemperatureScale(),
+            name:   "thermostatMode",
+            value:  mode
         ])
     }
 
-    if (tstat.containsKey("t_heat")) {
+    if (tstat.containsKey("t_cool")) {
+        tval = scaleTemperature(tstat.t_cool.toFloat())
         events << createEvent([
-            name:   "heatingSetpoint",
-            value:  scaleTemperature(tstat.t_heat.toFloat()),
+            name:   "coolingSetpoint",
+            value:  tval,
             unit:   getTemperatureScale(),
         ])
+        if (mode == "cool") {
+            events << createEvent([
+                name:   "thermostatSetpoint",
+                value:  tval,
+                unit:   getTemperatureScale(),
+            ])
+        }
+    }
+
+    if (tstat.containsKey("t_heat")) {
+        tval = scaleTemperature(tstat.t_heat.toFloat())
+        events << createEvent([
+            name:   "heatingSetpoint",
+            value:  tval,
+            unit:   getTemperatureScale(),
+        ])
+        if (mode == "heat") {
+            events << createEvent([
+                name:   "thermostatSetpoint",
+                value:  tval,
+                unit:   getTemperatureScale(),
+            ])
+        }
     }
 
     if (tstat.containsKey("tstate")) {
@@ -652,13 +683,6 @@ private def parseTstatData(Map tstat) {
         events << createEvent([
             name:   "fanState",
             value:  parseFanState(tstat.fstate)
-        ])
-    }
-
-    if (tstat.containsKey("tmode")) {
-        events << createEvent([
-            name:   "thermostatMode",
-            value:  parseThermostatMode(tstat.tmode)
         ])
     }
 
