@@ -62,6 +62,7 @@ metadata {
         command "temperatureDown"
         command "holdOn"
         command "holdOff"
+        command "setTimeToCurrent"
     }
 }
 
@@ -468,6 +469,19 @@ def holdOff() {
     sendEvent([name:"hold", value:"off"])
 
     return writeTstatValue("hold", 0)
+}
+
+// Custom command
+def setTimeToCurrent() {
+    Date date = new Date()
+  
+    log.info "Setting current time"
+    
+    int dow = date[Calendar.DAY_OF_WEEK] - 2
+    if (dow<0)
+        dow = dow + 7
+    apiPost("/tstat/time", "{\"hour\":" + date.format("H") + ", \"minute\": " + date.format("m") + ", \"day\":" + dow + "}")
+
 }
 
 // polling.poll 
